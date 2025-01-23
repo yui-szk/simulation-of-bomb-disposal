@@ -1,6 +1,6 @@
 #include "ofApp.h"
 
-const int numCables = 3;
+const int numCables = 6;
 int correctCable;
 int status;
 
@@ -26,7 +26,7 @@ void ofApp::setup() {
 
   correctCable = int(ofRandom(0, numCables));
 
-  timerDuration = 5;
+  timerDuration = 15;
   startTime = 0;
   isStarted = false;
   isTimerActive = false;
@@ -43,7 +43,7 @@ void ofApp::update() {
     float elapsedTime = ofGetElapsedTimef() - startTime;
     if (elapsedTime >= timerDuration) {
       isTimerActive = false;
-      status = 3;
+      status = 3;  // タイムオーバー
     }
   }
 
@@ -53,15 +53,16 @@ void ofApp::update() {
 
     if (arduinoRead) {
       if (arduinoRead == correctCable) {
-        status = 1;
+        status = 1;  // 成功
       } else {
-        status = 2;
+        status = 2;  // 失敗
       }
       isTimerActive = false;
     }
   }
 
-  std::cout << correctCable << std::endl;
+  // 正解ケーブルの表示
+  // std::cout << correctCable << std::endl;
 }
 
 //--------------------------------------------------------------
@@ -90,6 +91,7 @@ void ofApp::draw() {
   if (status == 1) {
     success.draw();
     timerSound.stop();
+
   } else if (status == 2 || status == 3) {
     failed.draw();
     timerSound.stop();
